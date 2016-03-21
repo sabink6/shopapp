@@ -1,0 +1,82 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+</h:head>
+
+<h:body>
+	<!-- <p:messages id="messages" /> -->
+	
+	<h:form id="form1">
+	<p:growl id="messages" />
+	<p:dataTable var="cartItem" value="#{cartView.thecart}" id="cartTable">
+
+		<p:column headerText="Name">
+			<h:outputText value="#{cartItem.product.name}" />
+		</p:column>
+
+		<p:column headerText="Description">
+			<h:outputText value="#{cartItem.product.description}" />
+		</p:column>
+
+		<p:column headerText="Price">
+			<h:outputText value="#{cartItem.product.price}" />
+		</p:column>
+
+		<p:column headerText="Image">
+			<img src="#{cartItem.product.imageFile}" />
+		</p:column>
+
+		<p:column headerText="Quantity">
+			<!--<h:form width="20dp">
+			<p:spinner id="ajaxSpinner" min="0" max="10" value="#{cartItem.amount}">
+			<p:ajax update="ajaxSpinnerValue" process="@this"/>
+			</p:spinner>
+			<h:inputText id="ajaxSpinnerValue" value="#{cartItem.amount}" style="padding-left: 10px"/>
+			</h:form>-->
+			
+			<h:inputText value="#{cartItem.amount}" style="padding-left: 10px"/>  
+			
+		</p:column>
+
+		<p:column headerText="Item Total">
+			<h:outputText value="#{cartItem.totalPrice}" />
+		</p:column>
+
+		<p:column headerText="Operations">
+		<!-- 	<h:form>
+				<p:commandButton value="Remove" icon="ui-icon-trash" action="#{cartView.remove(cartItem)}" update=":cartTable, :messages">
+					<p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
+				</p:commandButton>
+			</h:form> -->
+		</p:column>
+	
+	</p:dataTable>
+	
+	<p:commandButton value="Update" icon="ui-icon-arrowrefresh-1-e" action="#{cartView.update}"/>
+	</h:form>
+	<!-- Confirmation dialog before removing CartItem from the list -->
+	
+	<script type="text/javascript">
+		function handleDialogSubmit(args, dialogName) {
+			if (!args.validationFailed) {
+				PF(dialogName).hide();
+			}
+		}
+	</script>
+	
+	<h:form>
+		<p:confirmDialog global="true" closeOnEscape="true">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+	</h:form>
+
+
+</h:body>
+</html>

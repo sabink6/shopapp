@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+    <h:head>
+
+</h:head>
+<h:body>
+<p:outputLabel value="Add Customer"></p:outputLabel>
+<h:form>            
+    
+ 
+    <p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+ 
+  
+        <h:panelGrid columns="2" cellpadding="5">
+            <p:outputLabel for="fname" value="First name:" />
+            <p:inputText id="fname" value="#{customerView.customer.fname}" required="true" label="fname" />
+ 
+            <p:outputLabel for="lname" value="Last name:" />
+            <p:inputText id="lname" value="#{customerView.customer.lname}" required="true" label="lname" />
+            
+ 
+            <p:outputLabel for="address" value="Address:" />
+            <p:inputText id="address" value="#{customerView.customer.address}" required="true" label="address" />
+            
+            <p:outputLabel for="email" value="Email:" />
+            <p:inputText id="email" value="#{customerView.customer.email}" required="true" label="email" />
+ 
+ 
+            <p:commandButton value="Add" action="#{customerView.add}" />
+        </h:panelGrid>
+    
+</h:form>
+</h:body>
+</html>

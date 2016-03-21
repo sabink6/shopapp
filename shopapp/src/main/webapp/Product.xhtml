@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+</h:head>
+
+<h:body>
+	<!-- <p:messages id="messages" /> -->
+	<p:growl id="messages" />
+	<p:dataTable var="product" value="#{productView.products}"
+		id="productTable">
+
+		<p:column headerText="Name">
+			<h:outputText value="#{product.name}" />
+		</p:column>
+
+		<p:column headerText="Description">
+			<h:outputText value="#{product.description}" />
+		</p:column>
+		
+		<p:column headerText="Qty">
+			<h:outputText value="#{product.qty}" />
+		</p:column>
+
+		<p:column headerText="Price">
+			<h:outputText value="#{product.price}" />
+		</p:column>
+
+		<p:column headerText="Image">
+			<img src="#{product.imageFile}"/>
+			<!--  <h:outputText value="#{product.imageFile}" />-->
+		</p:column>
+
+	</p:dataTable>
+	
+	<p:commandButton value="Add Product"
+					action="#{productView.adding()}"
+					icon="ui-icon-circle-plus"
+					oncomplete="PF('productDialogAdd').show()" />
+					<!-- update=":customerForm" resetValues="true" -->
+					
+	
+	<p:dialog widgetVar="productDialogAdd" closeOnEscape="true" modal="true"
+		header="New Product">
+		<h:form id="productFormAdd">
+			<p:messages />
+			<p:focus />
+			<p:panelGrid columns="2">
+		Name:
+		<p:inputText value="#{productView.product.name}" />
+		Description:
+		<p:inputText value="#{productView.product.description}" />
+		Qty:
+		<p:inputText value="#{productView.product.qty}" />
+		Price:
+		<p:inputText value="#{productView.product.price}" />
+		Image:
+		<p:inputText value="#{productView.product.imageFile}" />
+
+			</p:panelGrid>
+			<p:commandButton value="save" action="#{productView.add()}"
+				update="productFormAdd, :productTable"
+				oncomplete="handleDialogSubmit(args, 'productDialogAdd')" />
+		
+		</h:form>
+	</p:dialog>
+
+</h:body>
+</html>

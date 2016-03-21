@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+</h:head>
+
+<h:body>
+	<!-- <p:messages id="messages" /> -->
+	<p:growl id="messages" />
+	<p:dataTable var="product" value="#{cartView.products}"
+		id="shopTable">
+
+		<p:column headerText="Name">
+			<h:outputText value="#{product.name}" />
+		</p:column>
+
+		<p:column headerText="Description">
+			<h:outputText value="#{product.description}" />
+		</p:column>
+
+		<p:column headerText="Price">
+			<h:outputText value="#{product.price}" />
+		</p:column>
+
+		<p:column headerText="Image">
+			<img src="#{product.imageFile}"/>
+		</p:column>
+		
+		<p:column headerText="Operations">
+		<h:form>
+		<p:commandButton value="Buy" icon="ui-icon-heart" action="#{cartView.buy(product)}"/> 
+		</h:form>
+		</p:column>
+		
+	</p:dataTable>
+	
+	<h:form>
+		<p:commandButton value="Go to Cart" icon="ui-icon-heart" action="#{cartView.goCart}"/> 
+	</h:form>
+	
+
+</h:body>
+</html>
