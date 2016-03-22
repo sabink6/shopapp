@@ -114,6 +114,8 @@ public class CartView {
 	}
 
 	public void checkout(){
+		//build up order
+		System.out.println(TAG + " git test saved cartItem: " + cartItem.toString());
 		System.out.println(TAG + " saved cartItem: " + cartItem.toString());
 	}
 
