@@ -12,6 +12,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import records.order.CustOrder;
 import records.product.Product;
 import records.product.ProductService;
 
@@ -115,7 +116,8 @@ public class CartView {
 
 	public void checkout(){
 		//build up order
-		System.out.println(TAG + " git test saved cartItem: " + cartItem.toString());
+		CustOrder o = new CustOrder();
+		o.setItems(thecart);
 		System.out.println(TAG + " saved cartItem: " + cartItem.toString());
 	}
 

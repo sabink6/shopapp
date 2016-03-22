@@ -33,7 +33,7 @@ public class CartItem{
 	}
 
 	public void setAmount(int amount) {
-		System.out.println("set amount "+ amount);
+		System.out.println("set amount " + amount);
 		this.amount = amount;
 	}
 
@@ -46,12 +46,12 @@ public class CartItem{
 	}
 	
 	public double getTotalPrice() {
-		return amount*product.getPrice();
+		return amount * product.getPrice();
 		//return totalPrice;
 	}
 
 	public void setTotalPrice(double totalPrice) {
-		System.out.println("set totalPrice "+ totalPrice);
+		System.out.println("set totalPrice " + totalPrice);
 		this.totalPrice = totalPrice;
 	}
 	
