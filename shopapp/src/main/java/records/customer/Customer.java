@@ -1,9 +1,14 @@
 package records.customer;
 
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import records.order.CustOrder;
 
 @Entity
 public class Customer {
@@ -15,6 +20,9 @@ public class Customer {
 	@Id
 	@GeneratedValue
 	private int id;
+	
+	@OneToMany
+	private List<CustOrder> custOrders;
 	
 	public void setId(int id) {
 		this.id = id;
@@ -59,11 +67,20 @@ public class Customer {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	
+	public List<CustOrder> getCustOrders() {
+		return custOrders;
+	}
+
+	public void setCustOrders(List<CustOrder> custOrders) {
+		this.custOrders = custOrders;
+	}
 
 	@Override
 	public String toString() {
-		return "Customer [fname=" + fname + ", lname=" + lname + ", Address=" + address + ", Email=" + email +", id=" + id + "]";
+		return "Customer [fname=" + fname + ", lname=" + lname + ", address=" + address + ", email=" + email + ", id="
+				+ id + ", custOrders=" + custOrders + "]";
 	}
-
 
 }

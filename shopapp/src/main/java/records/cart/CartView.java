@@ -12,7 +12,10 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import records.customer.Customer;
+import records.customer.CustomerService;
 import records.order.CustOrder;
+import records.order.OrderService;
 import records.product.Product;
 import records.product.ProductService;
 
@@ -26,10 +29,42 @@ public class CartView {
 	private CartItemService store;
 	@ManagedProperty("#{productService}")
 	private ProductService productService;
+	@ManagedProperty("#{orderService}")
+	private OrderService orderService;
+	@ManagedProperty("#{customerService}")
+	private CustomerService customerService;
 
 	private List<CartItem> thecart;
 	private CartItem cartItem;
+	
 	private List<Product> products;
+	private List<Customer> customers;
+//	private Customer customer;
+//	private CustOrder custOrder;
+
+	public CartItemService getStore() {
+		return store;
+	}
+
+	public void setStore(CartItemService store) {
+		this.store = store;
+	}
+	
+	public ProductService getProductService() {
+		return productService;
+	}
+
+	public void setProductService(ProductService productService) {
+		this.productService = productService;
+	}
+	
+	public OrderService getOrderService() {
+		return orderService;
+	}
+
+	public void setOrderService(OrderService orderService) {
+		this.orderService = orderService;
+	}
 
 	public List<Product> getProducts() {
 		products = productService.findAll();
@@ -39,27 +74,44 @@ public class CartView {
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
-
-	public CartItemService getStore() {
-		return store;
+	
+	public CustomerService getCustomerService() {
+		return customerService;
 	}
 
-	public void setStore(CartItemService store) {
-		this.store = store;
+	public void setCustomerService(CustomerService customerService) {
+		this.customerService = customerService;
 	}
+
+	public List<Customer> getCustomers() {
+		customers = customerService.findAll();
+		return customers;
+	}
+
+	public void setCustomers(List<Customer> customers) {
+		this.customers = customers;
+	}
+	
+//	public CustOrder getCustOrder() {
+//		return custOrder;
+//	}
+//
+//	public void setCustOrder(CustOrder custOrder) {
+//		this.custOrder = custOrder;
+//	}
+
+//	public Customer getCustomer() {
+//		return customer;
+//	}
+//
+//	public void setCustomer(Customer customer) {
+//		this.customer = customer;
+//	}
 
 	public List<CartItem> getThecart() {
 		//theCart = store.findAll();
 		System.out.println(TAG + " getThecart");
 		return thecart;
-	}
-
-	public ProductService getProductService() {
-		return productService;
-	}
-
-	public void setProductService(ProductService productService) {
-		this.productService = productService;
 	}
 
 	public void setTheCart(List<CartItem> theCart) {
@@ -79,11 +131,19 @@ public class CartView {
 		cartItem = new CartItem();
 		thecart = new ArrayList<CartItem>();
 		System.out.println(TAG + " postconstruct cartItem");
-		//theCart = store.findAll();
 	}
+	
+//	@PostConstruct
+//	public void makeCustomer(){
+//		customer = new Customer();
+//		//thecart = new ArrayList<CartItem>();
+//		System.out.println(TAG + " postconstruct customer");
+//	}
+
 
 	//create a new CartItem object and add it into an arrayList of CartItems
 	public String buy(Product p){
+		System.out.println(TAG + " selected product to buy: " + p.toString());
 		thecart.add(cartItem);
 		cartItem.setProduct(p);
 		cartItem.setAmount(1);
@@ -113,12 +173,30 @@ public class CartView {
 	public String goCart(){
 		return "./cartView.xhtml";
 	}
+	
 
-	public void checkout(){
-		//build up order
+	public void checkout(Customer c){
+		//build up order from cartItems in theCart
+		System.out.println(TAG + " The Cart: " + thecart.toString());
 		CustOrder o = new CustOrder();
 		o.setItems(thecart);
-		System.out.println(TAG + " saved cartItem: " + cartItem.toString());
+		//TODO: add check for customer
+		customers = new ArrayList<Customer>(getCustomers());
+		for(Customer cust : customers){
+			if(cust.getFname().equalsIgnoreCase(c.getFname())){
+//				System.out.println(TAG + " Customer c fname: " + c.getFname());
+//				System.out.println(TAG + " Customer cust fname: " + cust.getFname());
+				o.setCustomer(cust);
+			}
+		}
+		
+//		o.setCustomer(c);
+		//save order to database
+//		System.out.println(TAG + " Order: " + o.toString());
+		orderService.save(o);
+		
 	}
+
+
 
 }

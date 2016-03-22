@@ -2,6 +2,8 @@ package records.order;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -9,10 +11,11 @@ import javax.persistence.OneToOne;
 import records.cart.CartItem;
 import records.customer.Customer;
 
+@Entity
 public class CustOrder {
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.ALL})
 	private Customer customer;
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.ALL})
 	private List<CartItem> items;
 	
 	@Id

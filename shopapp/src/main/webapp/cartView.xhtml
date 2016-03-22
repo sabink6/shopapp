@@ -45,11 +45,27 @@
 	</p:dataTable>
 	
 	<p:commandButton value="Update" icon="ui-icon-arrowrefresh-1-e" action="#{cartView.update}" update=":form"/>
-	<p:commandButton value="Checkout" icon="ui-icon-arrowrefresh-1-e" action="#{cartView.checkout}"/>
+	<p:commandButton value="Checkout" icon="ui-icon-arrowrefresh-1-e" oncomplete="PF('customerLoginDialog').show()"/>
 	</h:form>
+
+	<p:dialog widgetVar="customerLoginDialog" closeOnEscape="true"
+		modal="true" header="Customer Login">
+		<h:form id="customerLoginForm">
+			<p:messages />
+			<p:focus />
+			<p:panelGrid columns="2">
+				First name:
+				<p:inputText value="#{customerView.customer.fname}" />
+				Email:
+				<p:inputText value="#{customerView.customer.email}" />
+			</p:panelGrid>
 	
-	
-	
+			<p:commandButton value="login" action="#{cartView.checkout(customerView.customer)}"
+				oncomplete="handleDialogSubmit(args, 'customerLoginForm')" />
+
+		</h:form>
+	</p:dialog>
+
 	<!-- Confirmation dialog before removing CartItem from the list -->
 	
 	<script type="text/javascript">
