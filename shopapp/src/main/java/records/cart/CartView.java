@@ -2,6 +2,7 @@ package records.cart;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -10,8 +11,16 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 
+
+import org.primefaces.context.RequestContext;
+import org.primefaces.util.Constants;
+import org.springframework.web.context.ContextLoader;
+
+import javafx.event.ActionEvent;
 import records.customer.Customer;
 import records.customer.CustomerService;
 import records.order.CustOrder;
@@ -36,11 +45,11 @@ public class CartView {
 
 	private List<CartItem> thecart;
 	private CartItem cartItem;
-	
+
 	private List<Product> products;
 	private List<Customer> customers;
-//	private Customer customer;
-//	private CustOrder custOrder;
+	//	private Customer customer;
+	//	private CustOrder custOrder;
 
 	public CartItemService getStore() {
 		return store;
@@ -49,7 +58,7 @@ public class CartView {
 	public void setStore(CartItemService store) {
 		this.store = store;
 	}
-	
+
 	public ProductService getProductService() {
 		return productService;
 	}
@@ -57,7 +66,7 @@ public class CartView {
 	public void setProductService(ProductService productService) {
 		this.productService = productService;
 	}
-	
+
 	public OrderService getOrderService() {
 		return orderService;
 	}
@@ -74,7 +83,7 @@ public class CartView {
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
-	
+
 	public CustomerService getCustomerService() {
 		return customerService;
 	}
@@ -91,22 +100,22 @@ public class CartView {
 	public void setCustomers(List<Customer> customers) {
 		this.customers = customers;
 	}
-	
-//	public CustOrder getCustOrder() {
-//		return custOrder;
-//	}
-//
-//	public void setCustOrder(CustOrder custOrder) {
-//		this.custOrder = custOrder;
-//	}
 
-//	public Customer getCustomer() {
-//		return customer;
-//	}
-//
-//	public void setCustomer(Customer customer) {
-//		this.customer = customer;
-//	}
+	//	public CustOrder getCustOrder() {
+	//		return custOrder;
+	//	}
+	//
+	//	public void setCustOrder(CustOrder custOrder) {
+	//		this.custOrder = custOrder;
+	//	}
+
+	//	public Customer getCustomer() {
+	//		return customer;
+	//	}
+	//
+	//	public void setCustomer(Customer customer) {
+	//		this.customer = customer;
+	//	}
 
 	public List<CartItem> getThecart() {
 		//theCart = store.findAll();
@@ -132,13 +141,13 @@ public class CartView {
 		thecart = new ArrayList<CartItem>();
 		System.out.println(TAG + " postconstruct cartItem");
 	}
-	
-//	@PostConstruct
-//	public void makeCustomer(){
-//		customer = new Customer();
-//		//thecart = new ArrayList<CartItem>();
-//		System.out.println(TAG + " postconstruct customer");
-//	}
+
+	//	@PostConstruct
+	//	public void makeCustomer(){
+	//		customer = new Customer();
+	//		//thecart = new ArrayList<CartItem>();
+	//		System.out.println(TAG + " postconstruct customer");
+	//	}
 
 
 	//create a new CartItem object and add it into an arrayList of CartItems
@@ -173,28 +182,76 @@ public class CartView {
 	public String goCart(){
 		return "./cartView.xhtml";
 	}
-	
 
-	public void checkout(Customer c){
+	private String username;
+
+	private String password;
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void login() {
+		System.out.println(TAG + " In the login");
+		System.out.println(TAG + " username: " + username);
+		System.out.println(TAG + " password: " + password);
+		RequestContext context = RequestContext.getCurrentInstance();
+		FacesMessage message = null;
+		boolean loggedIn = false;
+		
+		//Customer cust = new Customer();
+		//cust.
+		
+		if(username != null && username.equals("admin") && password != null && password.equals("admin")) {
+			loggedIn = true;
+			message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", username);
+		} else {
+			loggedIn = false;
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+		}
+
+		FacesContext.getCurrentInstance().addMessage(null, message);
+		context.addCallbackParam("loggedIn", loggedIn);
+	}   
+
+
+	public void checkout(){
 		//build up order from cartItems in theCart
 		System.out.println(TAG + " The Cart: " + thecart.toString());
 		CustOrder o = new CustOrder();
 		o.setItems(thecart);
 		//TODO: add check for customer
-		customers = new ArrayList<Customer>(getCustomers());
-		for(Customer cust : customers){
-			if(cust.getFname().equalsIgnoreCase(c.getFname())){
-//				System.out.println(TAG + " Customer c fname: " + c.getFname());
-//				System.out.println(TAG + " Customer cust fname: " + cust.getFname());
-				o.setCustomer(cust);
-			}
-		}
-		
-//		o.setCustomer(c);
-		//save order to database
-//		System.out.println(TAG + " Order: " + o.toString());
-		orderService.save(o);
-		
+		RequestContext context = RequestContext.getCurrentInstance();
+		Map<Object,Object> attrs = context.getAttributes();
+		String dialogOutcome = (String) attrs.get(Constants.DIALOG_FRAMEWORK.OUTCOME);
+		System.out.println(TAG + " Dialog: " + dialogOutcome);
+
+		//		customers = new ArrayList<Customer>(getCustomers());
+		//		for(Customer cust : customers){
+		//			if(cust.getFname().equalsIgnoreCase(c.getFname())){
+		////				System.out.println(TAG + " Customer c fname: " + c.getFname());
+		////				System.out.println(TAG + " Customer cust fname: " + cust.getFname());
+		//				o.setCustomer(cust);
+		//			}
+		//		}
+		//		
+		////		o.setCustomer(c);
+		//		//save order to database
+		////		System.out.println(TAG + " Order: " + o.toString());
+		//orderService.save(o);
+
 	}
 
 
