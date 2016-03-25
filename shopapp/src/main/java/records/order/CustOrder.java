@@ -13,9 +13,10 @@ import records.customer.Customer;
 
 @Entity
 public class CustOrder {
-	@OneToOne(cascade = {CascadeType.ALL})
+	
+	@OneToOne(cascade = {CascadeType.MERGE})
 	private Customer customer;
-	@OneToMany(cascade = {CascadeType.ALL})
+	@OneToMany(cascade = {CascadeType.PERSIST})
 	private List<CartItem> items;
 	
 	@Id

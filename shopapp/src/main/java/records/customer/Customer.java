@@ -3,10 +3,13 @@ package records.customer;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.criteria.Order;
 
 import records.order.CustOrder;
 
@@ -16,12 +19,13 @@ public class Customer {
 	private String lname;
 	private String address;
 	private String email;
+	private String password;
 	
 	@Id
 	@GeneratedValue
 	private int id;
 	
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.PERSIST})
 	private List<CustOrder> custOrders;
 	
 	public void setId(int id) {
@@ -76,11 +80,21 @@ public class Customer {
 	public void setCustOrders(List<CustOrder> custOrders) {
 		this.custOrders = custOrders;
 	}
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 	@Override
 	public String toString() {
 		return "Customer [fname=" + fname + ", lname=" + lname + ", address=" + address + ", email=" + email + ", id="
 				+ id + ", custOrders=" + custOrders + "]";
 	}
+
+	
 
 }

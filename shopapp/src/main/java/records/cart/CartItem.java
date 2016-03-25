@@ -47,7 +47,6 @@ public class CartItem{
 	
 	public double getTotalPrice() {
 		return amount * product.getPrice();
-		//return totalPrice;
 	}
 
 	public void setTotalPrice(double totalPrice) {

@@ -11,7 +11,7 @@
 	<!-- <p:messages id="messages" /> -->
 	
 	<h:form id="form">
-	<p:growl id="messages" />
+	
 	<p:dataTable var="cartItem" value="#{cartView.thecart}" id="cartTable">
 
 		<p:column headerText="Name">
@@ -47,43 +47,36 @@
 	<p:commandButton value="Update" icon="ui-icon-arrowrefresh-1-e" action="#{cartView.update}" update=":form"/>
 	<p:commandButton value="Checkout" icon="ui-icon-arrowrefresh-1-e" oncomplete="PF('customerLoginDialog').show()"/>
 	</h:form>
+	
+	
 
-	<p:dialog widgetVar="customerLoginDialog" closeOnEscape="true"
-		modal="true" header="Customer Login">
+	<p:dialog widgetVar="customerLoginDialog" closeOnEscape="true" modal="true" header="Customer Login">
 		<h:form id="customerLoginForm">
-			<p:messages />
-			<p:focus />
-			<p:panelGrid columns="2">
-				First name:
-				<p:inputText value="#{customerView.customer.fname}" />
-				Email:
-				<p:inputText value="#{customerView.customer.email}" />
+		<p:growl id="messages" sticky="true" showDetail="true" life="3000"/>
+			<p:panelGrid columns="2" cellpadding="5">
+				<h:outputLabel for="email" value="Email:" />
+            	<p:inputText id="username" value="#{cartView.email}" required="true" label="email" />
+ 
+            	<h:outputLabel for="password" value="Password:" />
+            	<p:password id="password" value="#{cartView.password}" required="true" label="password" />
 			</p:panelGrid>
 	
-			<p:commandButton value="login" action="#{cartView.checkout(customerView.customer)}"
-				oncomplete="handleDialogSubmit(args, 'customerLoginForm')" />
+			<p:commandButton value="Login" update="messages" action="#{cartView.checkout}" oncomplete="handleDialogSubmit(xhr, status, args, 'customerLoginDialog')" />
 
 		</h:form>
 	</p:dialog>
 
-	<!-- Confirmation dialog before removing CartItem from the list -->
-	
 	<script type="text/javascript">
-		function handleDialogSubmit(args, dialogName) {
-			if (!args.validationFailed) {
-				PF(dialogName).hide();
-			}
-		}
+	    function handleDialogSubmit(xhr, status, args, dialogName)  {
+	        if(args.validationFailed || !args.loggedIn) {
+	            PF(dialogName).jq.effect("shake", {times:5}, 100);
+	        }
+	        else {
+	            PF(dialogName).hide();
+	            $('#loginLink').fadeOut();
+	        }
+	    }
 	</script>
-	
-	<h:form>
-		<p:confirmDialog global="true" closeOnEscape="true">
-			<p:commandButton value="Yes" type="button"
-				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-			<p:commandButton value="No" type="button"
-				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-		</p:confirmDialog>
-	</h:form>
 
 
 </h:body>
