@@ -14,6 +14,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
+import javax.persistence.criteria.Order;
 
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -182,35 +183,37 @@ public class CartView {
 		boolean loggedIn = false;
 		
 		Customer customer = customerService.loginCustomer(email, password);
-		if(customer!=null){
+		
+		if(customer != null){
 			System.out.println(TAG + " Customer in the login " + customer.getEmail() + " " + customer.getPassword());
-		}
-		
-		
-		if(email != null && email.equals("joe@cork.com") && password != null && password.equals("1234")) {
-			loggedIn = true;
 			message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", email);
-		} else {
-			loggedIn = false;
+			loggedIn = true;
+		}else{
 			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+			loggedIn = false;
 		}
+		
+		System.out.println(TAG + " Logged in? " + loggedIn);
 
 		FacesContext.getCurrentInstance().addMessage(null, message);
 		context.addCallbackParam("loggedIn", loggedIn);
 		
-		//create CustOrder
-		System.out.println(TAG + " The Cart: " + thecart.toString());
-		CustOrder o = new CustOrder();
-		o.setItems(thecart);
-		o.setCustomer(customer);
-		orderService.save(o);
+		if(loggedIn){
+			//create CustOrder
+			System.out.println(TAG + " The Cart: " + thecart.toString());
+			CustOrder order = new CustOrder();
+			order.setItems(thecart);
+			order.setCustomer(customer);
+			orderService.save(order);
+
+			List<CustOrder> orders = new ArrayList();
+			orders.add(order);
+			customer.setCustOrders(orders);
+			//creates an entry in customer_custorder table otherwise empty set
+			customerService.save(customer);
+		}
 		
-		Configuration configuration = new Configuration().configure();
-		StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
-		SessionFactory sf = configuration.buildSessionFactory(builder.build());
-		sf.getCurrentSession();
-		Hibernate.initialize(customer.getCustOrders());
-		//.add(o);
+
 	} 
 
 

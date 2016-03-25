@@ -45,7 +45,7 @@
 	</p:dataTable>
 	
 	<p:commandButton value="Update" icon="ui-icon-arrowrefresh-1-e" action="#{cartView.update}" update=":form"/>
-	<p:commandButton value="Checkout" icon="ui-icon-arrowrefresh-1-e" oncomplete="PF('customerLoginDialog').show()"/>
+	<p:commandButton value="Checkout" icon="ui-icon-arrowrefresh-1-e" oncomplete="if (!args.loggedIn) PF('customerLoginDialog').show()"/>
 	</h:form>
 	
 	
@@ -61,13 +61,13 @@
             	<p:password id="password" value="#{cartView.password}" required="true" label="password" />
 			</p:panelGrid>
 	
-			<p:commandButton value="Login" update="messages" action="#{cartView.checkout}" oncomplete="handleDialogSubmit(xhr, status, args, 'customerLoginDialog')" />
+			<p:commandButton value="Login" update="messages" action="#{cartView.checkout}" oncomplete="handleDialogSubmit(args, 'customerLoginDialog')" />
 
 		</h:form>
 	</p:dialog>
 
 	<script type="text/javascript">
-	    function handleDialogSubmit(xhr, status, args, dialogName)  {
+	    function handleDialogSubmit(args, dialogName)  {
 	        if(args.validationFailed || !args.loggedIn) {
 	            PF(dialogName).jq.effect("shake", {times:5}, 100);
 	        }

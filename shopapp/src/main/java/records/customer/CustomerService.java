@@ -4,6 +4,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import records.order.CustOrder;
+
 @Service
 public class CustomerService {
 
@@ -22,7 +24,6 @@ public class CustomerService {
 		customerRepository.delete(cust);
 	}
 	
-	//where is this code
 	public Customer loginCustomer(String email, String password){
 		Customer customer = this.findCustomer(email);
 		if(customer != null && customer.getPassword().equals(password)){
@@ -34,6 +35,5 @@ public class CustomerService {
 	private Customer findCustomer(String email) {
 		return customerRepository.findByEmailAddress(email);
 	}
-
 }
 
