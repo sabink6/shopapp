@@ -54,6 +54,16 @@ public class CartView {
 	private CartItem cartItem;
 
 	private List<Product> products;
+	
+	private int orderId;
+
+	public int getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
+	}
 
 	public CartItemService getStore() {
 		return store;
@@ -174,7 +184,7 @@ public class CartView {
 	}
 
 	
-	public void checkout() {
+	public String checkout() {
 		System.out.println(TAG + " In the login");
 		System.out.println(TAG + " email: " + email);
 		System.out.println(TAG + " password: " + password);
@@ -211,7 +221,11 @@ public class CartView {
 			customer.setCustOrders(orders);
 			//creates an entry in customer_custorder table otherwise empty set
 			customerService.save(customer);
+			orderId = order.getId();
+			System.out.println(TAG + " OrderId to be sent: " + orderId);
+			return "./order.xhtml?faces-redirect=true&orderId=" + orderId +"\"";
 		}
+		return null;
 		
 
 	} 

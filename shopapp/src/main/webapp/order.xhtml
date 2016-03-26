@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+
+</h:head>
+<h:body>
+	<f:metadata>
+		<f:viewParam name="id" value="#{cartView.orderId}" />
+		<f:viewAction action="#{orderView.onload(cartView.orderId)}" />
+	</f:metadata>
+	
+	<h:outputText value="Order Details" style="font-size:30px"></h:outputText>
+	
+	<p:outputPanel>
+		<h:panelGrid columns="2" cellpadding="5">
+			<h:outputText value="OrderID" />
+			<p:outputLabel id="out" value="#{cartView.orderId}" />
+			<h:outputText value="" />
+		</h:panelGrid>
+	</p:outputPanel>
+
+	<h:form>
+		<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+		<h:panelGrid columns="2" cellpadding="5">
+			<p:outputLabel value="orderView.order.id" />
+			<p:outputLabel value="" />
+			<p:outputLabel value="" />
+			<p:commandButton value="Pay" />
+		</h:panelGrid>
+
+	</h:form>
+</h:body>
+</html>

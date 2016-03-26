@@ -21,4 +21,8 @@ public class OrderService {
 	public void remove(CustOrder order){
 		orderRepository.delete(order);
 	}
+
+	public CustOrder findOrderById(int id) {
+		return orderRepository.findOne(id);
+	}
 }
