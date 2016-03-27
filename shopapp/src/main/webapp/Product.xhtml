@@ -8,43 +8,55 @@
 </h:head>
 
 <h:body>
-	<!-- <p:messages id="messages" /> -->
-	<p:growl id="messages" />
-	<p:dataTable var="product" value="#{productView.products}"
-		id="productTable">
+	<p:layout fullPage="true">
+		<p:layoutUnit position="north" size="200" header="CarsDealz"
+			resizable="true" closable="true" collapsible="true">
+			<h:outputText value="Layout content for North" />
+		</p:layoutUnit>
+		<p:layoutUnit position="center">
 
-		<p:column headerText="Name">
-			<h:outputText value="#{product.name}" />
-		</p:column>
+			<!-- <p:messages id="messages" /> -->
+			<p:growl id="messages" />
 
-		<p:column headerText="Description">
-			<h:outputText value="#{product.description}" />
-		</p:column>
+			<p:dataTable var="product" value="#{productView.products}"
+				id="productTable">
+
+				<p:column headerText="Name">
+					<h:outputText value="#{product.name}" />
+				</p:column>
+
+				<p:column headerText="Description">
+					<h:outputText value="#{product.description}" />
+				</p:column>
+
+				<p:column headerText="Qty">
+					<h:outputText value="#{product.qty}" />
+				</p:column>
+
+				<p:column headerText="Price">
+					<h:outputText value="#{product.price}" />
+				</p:column>
+
+				<p:column headerText="Image">
+					<img src="#{product.imageFile}" />
+					<!--  <h:outputText value="#{product.imageFile}" />-->
+				</p:column>
+
+			</p:dataTable>
+		</p:layoutUnit>
 		
-		<p:column headerText="Qty">
-			<h:outputText value="#{product.qty}" />
-		</p:column>
-
-		<p:column headerText="Price">
-			<h:outputText value="#{product.price}" />
-		</p:column>
-
-		<p:column headerText="Image">
-			<img src="#{product.imageFile}"/>
-			<!--  <h:outputText value="#{product.imageFile}" />-->
-		</p:column>
-
-	</p:dataTable>
-	
-	<p:commandButton value="Add Product"
-					action="#{productView.adding()}"
-					icon="ui-icon-circle-plus"
-					oncomplete="PF('productDialogAdd').show()" />
-					<!-- update=":customerForm" resetValues="true" -->
-					
-	
-	<p:dialog widgetVar="productDialogAdd" closeOnEscape="true" modal="true"
-		header="New Product">
+		<p:layoutUnit position="south" size="100" resizable="true"
+			closable="true" collapsible="true">
+			<p:commandButton value="Add Product" action="#{productView.adding()}"
+				icon="ui-icon-circle-plus"
+				
+				oncomplete="PF('productDialogAdd').show()" />
+			<!-- update=":customerForm" resetValues="true" -->
+		</p:layoutUnit>
+		
+	</p:layout>
+	<p:dialog widgetVar="productDialogAdd" closeOnEscape="true"
+		modal="true" header="New Product">
 		<h:form id="productFormAdd">
 			<p:messages />
 			<p:focus />
@@ -64,7 +76,7 @@
 			<p:commandButton value="save" action="#{productView.add()}"
 				update="productFormAdd, :productTable"
 				oncomplete="handleDialogSubmit(args, 'productDialogAdd')" />
-		
+
 		</h:form>
 	</p:dialog>
 
