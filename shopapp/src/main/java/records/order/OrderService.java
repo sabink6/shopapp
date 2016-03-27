@@ -4,6 +4,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import records.cart.CartItem;
+
 @Service
 public class OrderService {
 
@@ -25,4 +27,10 @@ public class OrderService {
 	public CustOrder findOrderById(int id) {
 		return orderRepository.findOne(id);
 	}
+	
+//	public List<CartItem> findAllCartItemsByOrderId(int id){
+//		return orderRepository.findAllCartItems(id);
+//		
+//		
+//	}
 }

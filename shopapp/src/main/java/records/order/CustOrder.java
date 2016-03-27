@@ -1,5 +1,6 @@
 package records.order;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -49,7 +50,9 @@ public class CustOrder {
 
 	@Override
 	public String toString() {
-		return "CustOrder [customer=" + customer + ", items=" + items + ", id=" + id + "]";
+		return "CustOrder [customer=" + customer + 
+				//", items=" + items + 
+				", id=" + id + "]";
 	}
 	
 	

@@ -50,10 +50,10 @@ public class CartView {
 	private CustomerService customerService;
 
 	private List<CartItem> thecart;
-	
 	private CartItem cartItem;
-
 	private List<Product> products;
+	private CustOrder order;
+	private Customer customer;
 	
 	private int orderId;
 
@@ -131,6 +131,22 @@ public class CartView {
 		System.out.println(TAG + " postconstruct cartItem");
 	}
 
+	public CustOrder getOrder() {
+		return order;
+	}
+
+	public void setOrder(CustOrder order) {
+		this.order = order;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
 	//create a new CartItem object and add it into an arrayList of CartItems
 	public String buy(Product p){
 		System.out.println(TAG + " selected product to buy: " + p.toString());
@@ -182,50 +198,98 @@ public class CartView {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 	
-	public String checkout() {
-		System.out.println(TAG + " In the login");
-		System.out.println(TAG + " email: " + email);
-		System.out.println(TAG + " password: " + password);
+	public void setThecart(List<CartItem> thecart) {
+		this.thecart = thecart;
+	}
+	
+	private boolean loggedIn;
+	
+	
+	public boolean isLoggedIn() {
+		return loggedIn;
+	}
+
+	public void setLoggedIn(boolean loggedIn) {
+		this.loggedIn = loggedIn;
+	}
+
+	public void checkout() {
+		System.out.println(TAG + " User LoggedIn " + loggedIn);
 		RequestContext context = RequestContext.getCurrentInstance();
-		FacesMessage message = null;
-		boolean loggedIn = false;
+		//FacesMessage message = null;
 		
-		Customer customer = customerService.loginCustomer(email, password);
-		
-		if(customer != null){
-			System.out.println(TAG + " Customer in the login " + customer.getEmail() + " " + customer.getPassword());
-			message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", email);
-			loggedIn = true;
+		if(!loggedIn){
+			
+			context.execute("PF('customerLoginDialog').show();");
+			customer = customerService.loginCustomer(email, password);
+			if(customer != null){
+				System.out.println(TAG + " Customer in the login " + customer.getEmail() + " " + customer.getPassword());
+				//message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", email);
+				System.out.println(TAG + " Success " + loggedIn);
+				//loggedIn = true;
+				setLoggedIn(true);
+			}else{
+				//message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+				System.out.println(TAG + " Fail " + loggedIn);
+				//loggedIn = false;
+				setLoggedIn(false);
+			}
+			System.out.println(TAG + " Close dialog here " + loggedIn);
+			FacesContext.getCurrentInstance();
+			context.addCallbackParam("loggedIn", loggedIn);
 		}else{
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
-			loggedIn = false;
+			System.out.println(TAG + " User already logged in");
 		}
 		
-		System.out.println(TAG + " Logged in? " + loggedIn);
 
-		FacesContext.getCurrentInstance().addMessage(null, message);
-		context.addCallbackParam("loggedIn", loggedIn);
-		
-		if(loggedIn){
-			//create CustOrder
-			System.out.println(TAG + " The Cart: " + thecart.toString());
-			CustOrder order = new CustOrder();
-			order.setItems(thecart);
-			order.setCustomer(customer);
-			orderService.save(order);
-
-			List<CustOrder> orders = new ArrayList();
-			orders.add(order);
-			customer.setCustOrders(orders);
-			//creates an entry in customer_custorder table otherwise empty set
-			customerService.save(customer);
-			orderId = order.getId();
-			System.out.println(TAG + " OrderId to be sent: " + orderId);
-			return "./order.xhtml?faces-redirect=true&orderId=" + orderId +"\"";
-		}
-		return null;
+//		System.out.println(TAG + " Logged in? " + loggedIn);
+//		
+//		if(!loggedIn){
+//			
+//		}
+//		
+//		System.out.println(TAG + " email: " + email);
+//		System.out.println(TAG + " password: " + password);
+//		RequestContext context = RequestContext.getCurrentInstance();
+//		FacesMessage message = null;
+//		
+//		
+//		customer = customerService.loginCustomer(email, password);
+//		
+//		if(customer != null){
+//			System.out.println(TAG + " Customer in the login " + customer.getEmail() + " " + customer.getPassword());
+//			message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", email);
+//			loggedIn = true;
+//		}else{
+//			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+//			loggedIn = false;
+//		}
+//		
+//		
+//
+//		FacesContext.getCurrentInstance().addMessage(null, message);
+//		context.addCallbackParam("loggedIn", loggedIn);
+//		
+//		if(loggedIn){
+//			//create CustOrder
+//			System.out.println(TAG + " The Cart: " + thecart.toString());
+//			order = new CustOrder();
+//			order.setItems(thecart);
+//			order.setCustomer(customer);
+//			orderService.save(order);
+//
+//			List<CustOrder> orders = new ArrayList<CustOrder>();
+//			orders.add(order);
+//			customer.setCustOrders(orders);
+//			//creates an entry in customer_custorder table otherwise empty set
+//			customerService.save(customer);
+//			System.out.println(TAG + " Customer saved: " + customer);
+//			orderId = order.getId();
+//			System.out.println(TAG + " OrderId to be sent: " + orderId);
+//			return "./order.xhtml?faces-redirect=true&orderId=" + orderId +"\"";
+//		}
+//		return null;
 		
 
 	} 

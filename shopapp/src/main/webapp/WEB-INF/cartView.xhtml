@@ -10,8 +10,8 @@
 <h:body>
 	<!-- <p:messages id="messages" /> -->
 	
-	<h:form id="form1">
-	<p:growl id="messages" />
+	<h:form id="form">
+	
 	<p:dataTable var="cartItem" value="#{cartView.thecart}" id="cartTable">
 
 		<p:column headerText="Name">
@@ -31,12 +31,7 @@
 		</p:column>
 
 		<p:column headerText="Quantity">
-			<!--<h:form width="20dp">
-			<p:spinner id="ajaxSpinner" min="0" max="10" value="#{cartItem.amount}">
-			<p:ajax update="ajaxSpinnerValue" process="@this"/>
-			</p:spinner>
-			<h:inputText id="ajaxSpinnerValue" value="#{cartItem.amount}" style="padding-left: 10px"/>
-			</h:form>-->
+			
 			
 			<h:inputText value="#{cartItem.amount}" style="padding-left: 10px"/>  
 			
@@ -46,36 +41,42 @@
 			<h:outputText value="#{cartItem.totalPrice}" />
 		</p:column>
 
-		<p:column headerText="Operations">
-		<!-- 	<h:form>
-				<p:commandButton value="Remove" icon="ui-icon-trash" action="#{cartView.remove(cartItem)}" update=":cartTable, :messages">
-					<p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
-				</p:commandButton>
-			</h:form> -->
-		</p:column>
-	
+		
 	</p:dataTable>
 	
-	<p:commandButton value="Update" icon="ui-icon-arrowrefresh-1-e" action="#{cartView.update}"/>
+	<p:commandButton value="Update" icon="ui-icon-arrowrefresh-1-e" action="#{cartView.update}" update=":form"/>
+	<p:commandButton value="Checkout" icon="ui-icon-arrowrefresh-1-e" oncomplete="if (!args.loggedIn) PF('customerLoginDialog').show()"/>
 	</h:form>
-	<!-- Confirmation dialog before removing CartItem from the list -->
 	
+	
+
+	<p:dialog widgetVar="customerLoginDialog" closeOnEscape="true" modal="true" header="Customer Login">
+		<h:form id="customerLoginForm">
+		<p:growl id="messages" sticky="true" showDetail="true" life="3000"/>
+			<p:panelGrid columns="2" cellpadding="5">
+				<h:outputLabel for="email" value="Email:" />
+            	<p:inputText id="email" value="#{cartView.email}" required="true" label="email" />
+ 
+            	<h:outputLabel for="password" value="Password:" />
+            	<p:password id="password" value="#{cartView.password}" required="true" label="password" />
+			</p:panelGrid>
+	
+			<p:commandButton value="Login" update="messages" action="#{cartView.checkout}" oncomplete="handleDialogSubmit(args, 'customerLoginDialog')" />
+
+		</h:form>
+	</p:dialog>
+
 	<script type="text/javascript">
-		function handleDialogSubmit(args, dialogName) {
-			if (!args.validationFailed) {
-				PF(dialogName).hide();
-			}
-		}
+	    function handleDialogSubmit(args, dialogName)  {
+	        if(args.validationFailed || !args.loggedIn) {
+	            PF(dialogName).jq.effect("shake", {times:5}, 100);
+	        }
+	        else {
+	            PF(dialogName).hide();
+	            $('#loginLink').fadeOut();
+	        }
+	    }
 	</script>
-	
-	<h:form>
-		<p:confirmDialog global="true" closeOnEscape="true">
-			<p:commandButton value="Yes" type="button"
-				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-			<p:commandButton value="No" type="button"
-				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-		</p:confirmDialog>
-	</h:form>
 
 
 </h:body>

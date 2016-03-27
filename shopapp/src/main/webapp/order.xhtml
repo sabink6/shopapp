@@ -12,25 +12,66 @@
 		<f:viewParam name="id" value="#{cartView.orderId}" />
 		<f:viewAction action="#{orderView.onload(cartView.orderId)}" />
 	</f:metadata>
-	
-	<h:outputText value="Order Details" style="font-size:30px"></h:outputText>
-	
-	<p:outputPanel>
-		<h:panelGrid columns="2" cellpadding="5">
-			<h:outputText value="OrderID" />
-			<p:outputLabel id="out" value="#{cartView.orderId}" />
-			<h:outputText value="" />
-		</h:panelGrid>
-	</p:outputPanel>
+
 
 	<h:form>
 		<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
 		<h:panelGrid columns="2" cellpadding="5">
-			<p:outputLabel value="orderView.order.id" />
+			<p:outputLabel value="Order Id" />
+			<p:outputLabel value="#{orderView.order.id}" />
+			<p:outputLabel value="Customer Details" style="font-size:30px" />
 			<p:outputLabel value="" />
-			<p:outputLabel value="" />
-			<p:commandButton value="Pay" />
+			<p:outputLabel value="Id" />
+			<p:outputLabel value="#{orderView.customer.id}" />
+			<p:outputLabel value="First Name" />
+			<p:outputLabel value="#{orderView.customer.fname}" />
+			<p:outputLabel value="Last Name" />
+			<p:outputLabel value="#{orderView.customer.lname}" />
+			<p:outputLabel value="Address" />
+			<p:outputLabel value="#{orderView.customer.address}" />
+			<p:outputLabel value="Email" />
+			<p:outputLabel value="#{orderView.customer.email}" />
 		</h:panelGrid>
+
+		<p:outputLabel value="Order Details" style="font-size:30px" />
+
+		<p:outputPanel>
+			<h:panelGrid columns="2" cellpadding="5">
+				<h:outputText value="OrderID" />
+				<p:outputLabel id="out" value="#{cartView.orderId}" />
+				<h:outputText value="" />
+			</h:panelGrid>
+		</p:outputPanel>
+
+		<p:dataTable var="cartItem" value="#{orderView.items}">
+			<p:column headerText="ProductId">
+				<h:outputText value="#{cartItem.product.id}" />
+			</p:column>
+
+			<p:column headerText="Name">
+				<h:outputText value="#{cartItem.product.name}" />
+			</p:column>
+
+			<p:column headerText="Description">
+				<h:outputText value="#{cartItem.product.description}" />
+			</p:column>
+
+			<p:column headerText="Qty">
+				<h:outputText value="#{cartItem.amount}" />
+			</p:column>
+
+			<p:column headerText="Price">
+				<h:outputText value="#{cartItem.totalPrice}" />
+			</p:column>
+
+		</p:dataTable>
+
+		<h:panelGrid columns="1" cellpadding="20" style="font-size:20px">
+			<p:outputLabel value="Total" />
+			<p:outputLabel value="#{orderView.total}" />
+		</h:panelGrid>
+		<p:commandButton value="Pay" />
+
 
 	</h:form>
 </h:body>

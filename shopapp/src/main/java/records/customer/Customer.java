@@ -2,15 +2,11 @@ package records.customer;
 
 
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.criteria.Order;
-
 import records.order.CustOrder;
 
 @Entity
@@ -25,7 +21,7 @@ public class Customer {
 	@GeneratedValue
 	private int id;
 	
-	@OneToMany(cascade = {CascadeType.PERSIST})
+	@OneToMany(cascade = {CascadeType.MERGE})
 	private List<CustOrder> custOrders;
 	
 	public void setId(int id) {
@@ -92,7 +88,9 @@ public class Customer {
 	@Override
 	public String toString() {
 		return "Customer [fname=" + fname + ", lname=" + lname + ", address=" + address + ", email=" + email + ", id="
-				+ id + ", custOrders=" + custOrders + "]";
+				+ id + 
+				//", custOrders=" + custOrders + 
+				"]";
 	}
 
 	

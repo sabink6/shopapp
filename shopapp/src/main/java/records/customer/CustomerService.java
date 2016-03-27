@@ -25,15 +25,19 @@ public class CustomerService {
 	}
 	
 	public Customer loginCustomer(String email, String password){
-		Customer customer = this.findCustomer(email);
+		Customer customer = this.findCustomerByEmail(email);
 		if(customer != null && customer.getPassword().equals(password)){
 			return customer;
 		}
 		return null;
 	}
 
-	private Customer findCustomer(String email) {
+	private Customer findCustomerByEmail(String email) {
 		return customerRepository.findByEmailAddress(email);
+	}
+	
+	public Customer findCustomerById(int id) {
+		return customerRepository.findOne(id);
 	}
 }
 
