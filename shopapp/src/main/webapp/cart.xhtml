@@ -42,24 +42,22 @@
 			<p:commandButton value="Update" icon="ui-icon-arrowrefresh-1-e"
 				update=":form" action="#{cartView.update}" />
 			<p:commandButton value="Checkout" icon="ui-icon-home"
-				action="#{cartView.checkout}" />
+				 update=":customerLoginForm" action="cartView.goOrder"
+				oncomplete="if (#{!cartView.loggedIn}) {PF('customerLoginDialog').show()}"	/>
 		</p:layoutUnit>
 		
 	</p:layout>
 
-	<p:dialog widgetVar="customerLoginDialog" closeOnEscape="true"
-		modal="true" header="Customer Login">
+	<p:dialog widgetVar="customerLoginDialog" closeOnEscape="true" modal="true" header="Customer Login">
 		<h:form id="customerLoginForm">
 			<p:growl id="messages" sticky="true" showDetail="true" life="3000" />
 			<p:panelGrid columns="2" cellpadding="5">
 				<h:outputLabel for="email" value="Email:" />
-				<p:inputText id="email" value="#{cartView.email}" required="true"
-					label="email" />
+				<p:inputText id="email" value="#{cartView.email}" required="true" label="email" />
 				<h:outputLabel for="password" value="Password:" />
-				<p:password id="password" value="#{cartView.password}"
-					required="true" label="password" />
+				<p:password id="password" value="#{cartView.password}" required="true" label="password" />
 			</p:panelGrid>
-			<p:commandButton value="Login" update="messages"
+			<p:commandButton value="Login" update="messages" action="#{cartView.checkout}"
 				oncomplete="handleDialogSubmit(args, 'customerLoginDialog')" />
 		</h:form>
 	</p:dialog>

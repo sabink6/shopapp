@@ -35,7 +35,7 @@ import records.product.Product;
 import records.product.ProductService;
 
 @ManagedBean
-@SessionScoped
+@ApplicationScoped
 public class CartView {
 
 	static final String TAG = CartView.class.getSimpleName().toUpperCase();
@@ -54,7 +54,7 @@ public class CartView {
 	private List<Product> products;
 	private CustOrder order;
 	private Customer customer;
-	
+
 	private int orderId;
 
 	public int getOrderId() {
@@ -163,14 +163,14 @@ public class CartView {
 	}
 
 
-//	public void remove(CartItem ci){
-//		//removes CartItem from database
-//		System.out.println(TAG + " about to remove from store" + ci.toString());
-//		store.remove(ci);
-//		//on the view update=":cartTable, :messages"
-//		thecart = store.findAll();
-//		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "CartItem removed!", null));
-//	}
+	//	public void remove(CartItem ci){
+	//		//removes CartItem from database
+	//		System.out.println(TAG + " about to remove from store" + ci.toString());
+	//		store.remove(ci);
+	//		//on the view update=":cartTable, :messages"
+	//		thecart = store.findAll();
+	//		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "CartItem removed!", null));
+	//	}
 
 	public void update(){
 	}
@@ -194,14 +194,14 @@ public class CartView {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public void setThecart(List<CartItem> thecart) {
 		this.thecart = thecart;
 	}
-	
+
 	private boolean loggedIn;
-	
-	
+
+
 	public boolean isLoggedIn() {
 		return loggedIn;
 	}
@@ -210,90 +210,60 @@ public class CartView {
 		this.loggedIn = loggedIn;
 	}
 
-	public void checkout() {
-		System.out.println(TAG + " User LoggedIn " + loggedIn);
-		RequestContext context = RequestContext.getCurrentInstance();
-		//FacesMessage message = null;
-		
-		if(!loggedIn){
+	public String checkout() {
 			
-			context.execute("PF('customerLoginDialog').show();");
+			System.out.println(TAG + " email: " + email);
+			System.out.println(TAG + " password: " + password);
+			RequestContext context = RequestContext.getCurrentInstance();
+			FacesMessage message = null;
+			
 			customer = customerService.loginCustomer(email, password);
+			
 			if(customer != null){
 				System.out.println(TAG + " Customer in the login " + customer.getEmail() + " " + customer.getPassword());
-				//message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", email);
-				System.out.println(TAG + " Success " + loggedIn);
-				//loggedIn = true;
-				setLoggedIn(true);
+				message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", email);
+				loggedIn = true;
 			}else{
-				//message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
-				System.out.println(TAG + " Fail " + loggedIn);
-				//loggedIn = false;
-				setLoggedIn(false);
+				message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+				loggedIn = false;
 			}
-			System.out.println(TAG + " Close dialog here " + loggedIn);
-			FacesContext.getCurrentInstance();
+			
+			//message can't be null when message goes back
+			FacesContext.getCurrentInstance().addMessage(null, message);
 			context.addCallbackParam("loggedIn", loggedIn);
-		}else{
-			System.out.println(TAG + " User already logged in");
-		}
-		
-
-//		System.out.println(TAG + " Logged in? " + loggedIn);
-//		
-//		if(!loggedIn){
-//			
-//		}
-//		
-//		System.out.println(TAG + " email: " + email);
-//		System.out.println(TAG + " password: " + password);
-//		RequestContext context = RequestContext.getCurrentInstance();
-//		FacesMessage message = null;
-//		
-//		
-//		customer = customerService.loginCustomer(email, password);
-//		
-//		if(customer != null){
-//			System.out.println(TAG + " Customer in the login " + customer.getEmail() + " " + customer.getPassword());
-//			message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", email);
-//			loggedIn = true;
-//		}else{
-//			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
-//			loggedIn = false;
-//		}
-//		
-//		
-//
-//		FacesContext.getCurrentInstance().addMessage(null, message);
-//		context.addCallbackParam("loggedIn", loggedIn);
-//		
-//		if(loggedIn){
-//			//create CustOrder
-//			System.out.println(TAG + " The Cart: " + thecart.toString());
-//			order = new CustOrder();
-//			order.setItems(thecart);
-//			order.setCustomer(customer);
-//			orderService.save(order);
-//
-//			List<CustOrder> orders = new ArrayList<CustOrder>();
-//			orders.add(order);
-//			customer.setCustOrders(orders);
-//			//creates an entry in customer_custorder table otherwise empty set
-//			customerService.save(customer);
-//			System.out.println(TAG + " Customer saved: " + customer);
-//			orderId = order.getId();
-//			System.out.println(TAG + " OrderId to be sent: " + orderId);
-//			return "./order.xhtml?faces-redirect=true&orderId=" + orderId +"\"";
-//		}
-//		return null;
-		
-
-	}
+			
+			if(loggedIn){
+				//create CustOrder
+				System.out.println(TAG + " The Cart: " + thecart.toString());
+				order = new CustOrder();
+				order.setItems(thecart);
+				order.setCustomer(customer);
+				orderService.save(order);
 	
+				List<CustOrder> orders = new ArrayList<CustOrder>();
+				orders.add(order);
+				customer.setCustOrders(orders);
+				//creates an entry in customer_custorder table otherwise empty set
+				customerService.save(customer);
+				System.out.println(TAG + " Customer saved: " + customer);
+				orderId = order.getId();
+				System.out.println(TAG + " OrderId to be sent: " + orderId);
+				return "./order.xhtml?faces-redirect=true&orderId=" + orderId +"\"";
+			}
+			return null;
+			
+	
+		}
+	
+	//this doesn't work 
+	public String goOrder(){
+		return "./order.xhtml";
+	}
+
 	public String goCart(){
 		return "./cart.xhtml";
 	}
-	
+
 	public String goAdmin(){
 		return "./admin.xhtml";
 	}

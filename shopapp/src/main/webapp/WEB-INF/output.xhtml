@@ -1,37 +1,40 @@
- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:p="http://primefaces.org/ui">
-    <h:head>
-<title>JSF 2.0 Hello World</title>
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>JSF 2.0 Hello World</title>
 </h:head>
 <h:body>
-    	<h1>JSF 2 Customer</h1>
- 
+	<h1>JSF 2 Customer</h1>
+
 	<!-- <p:messages id="messages" /> -->
-<p:growl id="messages" />
-   
- <h2 align="center">All customers</h2>
-<p:dataTable value="#{customerView.customers}" var="customer" id="customerTable">
-    <p:column>
-        <f:facet name="header">
-            <h:outputText value="Customer name"></h:outputText>
-        </f:facet>
-        <h:outputText value="#{customer.name}"></h:outputText>
-    </p:column>
-    <p:column>
-        <f:facet name="header">
-            <h:outputText value="Customer Address"></h:outputText>
-        </f:facet>
-        <h:outputText value="#{customer.address}"></h:outputText>
-    </p:column>
-    <p:column headerText="operations">
+	<p:growl id="messages" />
+
+	<h2 align="center">All customers</h2>
+	<p:dataTable value="#{customerView.customers}" var="customer"
+		id="customerTable">
+		<p:column>
+			<f:facet name="header">
+				<h:outputText value="Customer name"></h:outputText>
+			</f:facet>
+			<h:outputText value="#{customer.name}"></h:outputText>
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+				<h:outputText value="Customer Address"></h:outputText>
+			</f:facet>
+			<h:outputText value="#{customer.address}"></h:outputText>
+		</p:column>
+		<p:column headerText="operations">
 			<h:form>
 				<p:commandButton value="edit"
-					action="#{customerView.setCustomer(customer)}" update=":customerForm"
-					resetValues="true" oncomplete="PF('customerDialog').show()" />
+					action="#{customerView.setCustomer(customer)}"
+					update=":customerForm" resetValues="true"
+					oncomplete="PF('customerDialog').show()" />
 				<p:commandButton value="remove"
 					action="#{customerView.remove(customer)}"
 					update=":customerTable, :messages">
@@ -40,8 +43,8 @@
 				</p:commandButton>
 			</h:form>
 		</p:column>
-</p:dataTable>
-<p:dialog widgetVar="customerDialog" closeOnEscape="true" modal="true"
+	</p:dataTable>
+	<p:dialog widgetVar="customerDialog" closeOnEscape="true" modal="true"
 		header="customer">
 		<h:form id="customerForm">
 			<p:messages />
@@ -69,4 +72,3 @@
 	</h:form>
 </h:body>
 </html>
-  
