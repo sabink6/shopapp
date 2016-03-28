@@ -10,7 +10,4 @@ import records.customer.Customer;
 
 public interface OrderRepository extends JpaRepository<CustOrder, Integer>{
 
-//	@Query("select c from CartItem c where c.id=?1")
-//	List<CartItem> findAllCartItems(int id);
-
 }

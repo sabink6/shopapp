@@ -175,10 +175,6 @@ public class CartView {
 	public void update(){
 	}
 
-	public String goCart(){
-		return "./cartView.xhtml";
-	}
-
 	private String email;
 
 	private String password;
@@ -292,7 +288,14 @@ public class CartView {
 //		return null;
 		
 
-	} 
-
+	}
+	
+	public String goCart(){
+		return "./cart.xhtml";
+	}
+	
+	public String goAdmin(){
+		return "./admin.xhtml";
+	}
 
 }

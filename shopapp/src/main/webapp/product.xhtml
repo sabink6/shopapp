@@ -9,10 +9,11 @@
 
 <h:body>
 	<p:layout fullPage="true">
-		<p:layoutUnit position="north" size="200" header="CarsDealz"
-			resizable="true" closable="true" collapsible="true">
-			<h:outputText value="Layout content for North" />
+
+		<p:layoutUnit position="north" size="100" header="CarsDealz">
+			<div align="center" style="margin-top:10px; font-size:22px; font-weight:bold"><h:outputText value="Products" /></div>
 		</p:layoutUnit>
+
 		<p:layoutUnit position="center">
 
 			<!-- <p:messages id="messages" /> -->
@@ -41,22 +42,21 @@
 					<img src="#{product.imageFile}" />
 					<!--  <h:outputText value="#{product.imageFile}" />-->
 				</p:column>
-
 			</p:dataTable>
 		</p:layoutUnit>
-		
-		<p:layoutUnit position="south" size="100" resizable="true"
-			closable="true" collapsible="true">
+
+		<p:layoutUnit position="south" size="100">
 			<p:commandButton value="Add Product" action="#{productView.adding()}"
 				icon="ui-icon-circle-plus"
-				
 				oncomplete="PF('productDialogAdd').show()" />
 			<!-- update=":customerForm" resetValues="true" -->
 		</p:layoutUnit>
-		
+
 	</p:layout>
+
 	<p:dialog widgetVar="productDialogAdd" closeOnEscape="true"
 		modal="true" header="New Product">
+
 		<h:form id="productFormAdd">
 			<p:messages />
 			<p:focus />
@@ -71,14 +71,20 @@
 		<p:inputText value="#{productView.product.price}" />
 		Image:
 		<p:inputText value="#{productView.product.imageFile}" />
-
 			</p:panelGrid>
 			<p:commandButton value="save" action="#{productView.add()}"
 				update="productFormAdd, :productTable"
 				oncomplete="handleDialogSubmit(args, 'productDialogAdd')" />
-
 		</h:form>
 	</p:dialog>
+
+	<script type="text/javascript">
+			function handleDialogSubmit(args, dialogName) {
+				if (!args.validationFailed) {
+					PF(dialogName).hide();
+				}
+			}
+	</script>
 
 </h:body>
 </html>

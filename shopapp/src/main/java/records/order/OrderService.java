@@ -27,10 +27,5 @@ public class OrderService {
 	public CustOrder findOrderById(int id) {
 		return orderRepository.findOne(id);
 	}
-	
-//	public List<CartItem> findAllCartItemsByOrderId(int id){
-//		return orderRepository.findAllCartItems(id);
-//		
-//		
-//	}
+
 }

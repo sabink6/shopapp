@@ -8,9 +8,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import records.order.CustOrder;
+import records.order.OrderView;
 
 @Entity
 public class Customer {
+	
+	static final String TAG = Customer.class.getSimpleName().toUpperCase();
+	
 	private String fname;
 	private String lname;
 	private String address;
@@ -33,22 +37,20 @@ public class Customer {
 	}
 	
 	public String getFname() {
-		System.out.println("customer getFname"+ fname);
+		System.out.println(TAG + " customer getFname " + fname);
 		return fname;
 	}
 
 	public void setFname(String fname) {
-		System.out.println("set Lname "+lname);
+		System.out.println(TAG + " set Fname " + lname);
 		this.fname = fname;
 	}
-
 
 	public String getLname() {
 		return lname;
 	}
 
 	public void setLname(String lname) {
-		System.out.println("set Lname "+lname);
 		this.lname = lname;
 	}
 

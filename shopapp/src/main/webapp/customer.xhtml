@@ -1,0 +1,135 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+</h:head>
+
+<h:body>
+	<p:layout fullPage="true">
+
+		<p:layoutUnit position="north" size="100" header="CarsDealz">
+		
+			<div align="center" style="margin-top:10px; font-size:22px; font-weight:bold"><h:outputText value="Customers" /></div>
+			
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center">
+
+			<!-- <p:messages id="messages" /> -->
+			<p:growl id="messages" />
+			
+			<p:dataTable var="customer" value="#{customerView.customers}"
+				id="customerTable">
+
+				<p:column headerText="First Name">
+					<h:outputText value="#{customer.fname}" />
+				</p:column>
+
+				<p:column headerText="Last Name">
+					<h:outputText value="#{customer.lname}" />
+				</p:column>
+
+				<p:column headerText="Address">
+					<h:outputText value="#{customer.address}" />
+				</p:column>
+
+				<p:column headerText="Email">
+					<h:outputText value="#{customer.email}" />
+				</p:column>
+
+				<p:column headerText="Operations">
+					<h:form>
+					
+						<p:commandButton value="edit"
+							action="#{customerView.setCustomer(customer)}"
+							icon="ui-icon-contact" update=":editCustomerForm" resetValues="true"
+							oncomplete="PF('editCustomerDialog').show()" />
+						
+						<p:commandButton value="remove"
+							action="#{customerView.remove(customer)}" icon="ui-icon-trash"
+							update=":customerTable, :messages">
+							<p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
+						</p:commandButton>
+						
+					</h:form>
+				</p:column>
+
+			</p:dataTable>
+		</p:layoutUnit>
+		
+
+		<p:layoutUnit position="south" size="100">
+			<p:commandButton value="Add Customer"
+				action="#{customerView.adding()}" icon="ui-icon-contact"
+				update=":addCustomerForm" resetValues="true"
+				oncomplete="PF('addCustomerDialog').show()" />
+		</p:layoutUnit>
+		
+		</p:layout>
+		
+		<p:dialog widgetVar="editCustomerDialog" closeOnEscape="true" 
+			modal="true" header="Edit Customer">
+			<h:form id="editCustomerForm">
+				<p:messages />
+				<p:focus />
+				<p:panelGrid columns="2">
+		First name:
+		<p:inputText value="#{customerView.customer.fname}" />
+		Last name:
+		<p:inputText value="#{customerView.customer.lname}" />
+		Address:
+		<p:inputText value="#{customerView.customer.address}" />
+		Email:
+		<p:inputText value="#{customerView.customer.email}" />
+
+				</p:panelGrid>
+				<p:commandButton value="update" action="#{customerView.add()}"
+					update="editCustomerForm, :customerTable"
+					oncomplete="handleDialogSubmit(args, 'editCustomerDialog')" />
+			</h:form>
+		</p:dialog>
+
+		<p:dialog widgetVar="addCustomerDialog" closeOnEscape="true"
+			modal="true" header="New Customer">
+			<h:form id="addCustomerForm">
+				<p:messages />
+				<p:focus />
+				<p:panelGrid columns="2">
+		First name:
+		<p:inputText value="#{customerView.customer.fname}" />
+		Last name:
+		<p:inputText value="#{customerView.customer.lname}" />
+		Address:
+		<p:inputText value="#{customerView.customer.address}" />
+		Email:
+		<p:inputText value="#{customerView.customer.email}" />
+
+				</p:panelGrid>
+				<p:commandButton value="save" action="#{customerView.add()}"
+					update="addCustomerForm, :customerTable"
+					oncomplete="handleDialogSubmit(args, 'addCustomerDialog')" />
+
+			</h:form>
+		</p:dialog>
+
+		<script type="text/javascript">
+			function handleDialogSubmit(args, dialogName) {
+				if (!args.validationFailed) {
+					PF(dialogName).hide();
+				}
+			}
+		</script>
+
+		<h:form>
+			<p:confirmDialog global="true" closeOnEscape="true">
+				<p:commandButton value="Yes" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="No" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+</h:body>
+</html>

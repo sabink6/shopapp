@@ -8,39 +8,49 @@
 </h:head>
 
 <h:body>
-	<!-- <p:messages id="messages" /> -->
-	<p:growl id="messages" />
-	<p:dataTable var="product" value="#{cartView.products}"
-		id="shopTable">
+	<p:layout fullPage="true">
+		<p:layoutUnit position="north" size="100" header="CarsDealz">
+			<h:form>
+				<p:button value="Admin" icon="ui-icon-locked" style="float: right" outcome="admin"/>
+				<p:commandButton value="Go to Cart" icon="ui-icon-check"
+					style="float: right;" action="#{cartView.goCart}" />
+			</h:form>
+		</p:layoutUnit>
+		<p:layoutUnit position="center">
+			<!-- <p:messages id="messages" /> -->
+			<p:growl id="messages" />
+			<p:dataTable var="product" value="#{cartView.products}"
+				id="shopTable">
 
-		<p:column headerText="Name">
-			<h:outputText value="#{product.name}" />
-		</p:column>
+				<p:column headerText="Name">
+					<h:outputText value="#{product.name}" />
+				</p:column>
 
-		<p:column headerText="Description">
-			<h:outputText value="#{product.description}" />
-		</p:column>
+				<p:column headerText="Description">
+					<h:outputText value="#{product.description}" />
+				</p:column>
 
-		<p:column headerText="Price">
-			<h:outputText value="#{product.price}" />
-		</p:column>
+				<p:column headerText="Price">
+					<h:outputText value="#{product.price}" />
+				</p:column>
 
-		<p:column headerText="Image">
-			<img src="#{product.imageFile}"/>
-		</p:column>
-		
-		<p:column headerText="Operations">
-		<h:form>
-		<p:commandButton value="Buy" icon="ui-icon-heart" action="#{cartView.buy(product)}"/> 
-		</h:form>
-		</p:column>
-		
-	</p:dataTable>
-	
-	<h:form>
-		<p:commandButton value="Go to Cart" icon="ui-icon-heart" action="#{cartView.goCart}"/> 
-	</h:form>
-	
+				<p:column headerText="Image">
+					<img src="#{product.imageFile}" />
+				</p:column>
+
+				<p:column headerText="Operations">
+					<h:form>
+						<p:commandButton value="Buy" icon="ui-icon-heart"
+							action="#{cartView.buy(product)}" />
+					</h:form>
+				</p:column>
+
+			</p:dataTable>
+		</p:layoutUnit>
+		<p:layoutUnit position="south" size="100">
+
+		</p:layoutUnit>
+	</p:layout>
 
 </h:body>
 </html>

@@ -17,6 +17,6 @@
   </listener>
   <context-param>
 <param-name>primefaces.THEME</param-name>
-<param-value>hot-sneaks</param-value>
+<param-value>blitzer</param-value>
 </context-param>
 </web-app>
