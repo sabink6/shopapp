@@ -8,71 +8,78 @@
 
 </h:head>
 <h:body>
+
 	<f:metadata>
 		<f:viewParam name="id" value="#{cartView.orderId}" />
 		<f:viewAction action="#{orderView.onload(cartView.orderId)}" />
 	</f:metadata>
 
-
-	<h:form>
-		<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
-		<h:panelGrid columns="2" cellpadding="5">
-			<p:outputLabel value="Order Id" />
-			<p:outputLabel value="#{orderView.order.id}" />
-			<p:outputLabel value="Customer Details" style="font-size:30px" />
-			<p:outputLabel value="" />
-			<p:outputLabel value="Id" />
-			<p:outputLabel value="#{orderView.customer.id}" />
-			<p:outputLabel value="First Name" />
-			<p:outputLabel value="#{orderView.customer.fname}" />
-			<p:outputLabel value="Last Name" />
-			<p:outputLabel value="#{orderView.customer.lname}" />
-			<p:outputLabel value="Address" />
-			<p:outputLabel value="#{orderView.customer.address}" />
-			<p:outputLabel value="Email" />
-			<p:outputLabel value="#{orderView.customer.email}" />
-		</h:panelGrid>
-
-		<p:outputLabel value="Order Details" style="font-size:30px" />
-
-		<p:outputPanel>
-			<h:panelGrid columns="2" cellpadding="5">
-				<h:outputText value="OrderID" />
-				<p:outputLabel id="out" value="#{cartView.orderId}" />
-				<h:outputText value="" />
+	<p:layout fullPage="true">
+		
+		<p:layoutUnit position="north" size="100" header="CarsDealz">
+			<h:panelGrid columns="2" cellpadding="4" style="font-style: italic">
+				<h:outputText value="Order Number:" />
+				<h:outputText value="#{orderView.order.id}" />
 			</h:panelGrid>
-		</p:outputPanel>
 
-		<p:dataTable var="cartItem" value="#{orderView.items}">
-			<p:column headerText="ProductId">
-				<h:outputText value="#{cartItem.product.id}" />
-			</p:column>
+		</p:layoutUnit>
 
-			<p:column headerText="Name">
-				<h:outputText value="#{cartItem.product.name}" />
-			</p:column>
+		<p:layoutUnit position="center">
+				<p:panelGrid columns="2" cellpadding="4">
+					<f:facet name="header">
+            			Customer Details
+        			</f:facet>
 
-			<p:column headerText="Description">
-				<h:outputText value="#{cartItem.product.description}" />
-			</p:column>
+					<h:outputText value="Id:" style="font-weight: bold" />
+					<h:outputText value="#{orderView.customer.id}" />
+					<h:outputText value="First Name:" style="font-weight: bold" />
+					<h:outputText value="#{orderView.customer.fname}" />
+					<h:outputText value="Last Name:" style="font-weight: bold" />
+					<h:outputText value="#{orderView.customer.lname}" />
+					<h:outputText value="Address:" style="font-weight: bold" />
+					<h:outputText value="#{orderView.customer.address}" />
+					<h:outputText value="Email:" style="font-weight: bold" />
+					<h:outputText value="#{orderView.customer.email}" />
+				</p:panelGrid>
 
-			<p:column headerText="Qty">
-				<h:outputText value="#{cartItem.amount}" />
-			</p:column>
+			<p:dataTable var="cartItem" value="#{orderView.items}" style="margin-top:20px">
+				<f:facet name="header">
+            			Order Summary
+        			</f:facet>
+				<p:column headerText="ProductId">
+					<h:outputText value="#{cartItem.product.id}" />
+				</p:column>
 
-			<p:column headerText="Price">
-				<h:outputText value="#{cartItem.totalPrice}" />
-			</p:column>
+				<p:column headerText="Name">
+					<h:outputText value="#{cartItem.product.name}" />
+				</p:column>
 
-		</p:dataTable>
+				<p:column headerText="Description">
+					<h:outputText value="#{cartItem.product.description}" />
+				</p:column>
 
-		<h:panelGrid columns="1" cellpadding="20" style="font-size:20px">
-			<p:outputLabel value="Total" />
-			<p:outputLabel value="#{orderView.total}" />
-		</h:panelGrid>
-		<p:commandButton value="Pay" />
+				<p:column headerText="Qty">
+					<h:outputText value="#{cartItem.amount}" />
+				</p:column>
 
-
-	</h:form>
+				<p:column headerText="Price">
+					<h:outputText value="#{cartItem.totalPrice}">
+						<f:convertNumber type="currency" currencySymbol="€" />
+					</h:outputText>
+				</p:column>
+				<p:columnGroup type="footer">
+					<p:row>
+						<p:column colspan="4" style="text-align:right" footerText="Total:" />
+						<p:column style="text-align:left" footerText="€#{orderView.total}" />
+					</p:row>
+				</p:columnGroup>
+			</p:dataTable>
+		</p:layoutUnit>
+		
+		<p:layoutUnit position="south" size="100">
+			<p:commandButton value="Pay" />
+		</p:layoutUnit>
+		
+	</p:layout>
 </h:body>
 </html>

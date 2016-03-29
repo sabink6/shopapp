@@ -22,7 +22,9 @@
 						<h:outputText value="#{cartItem.product.description}" />
 					</p:column>
 					<p:column headerText="Price">
-						<h:outputText value="#{cartItem.product.price}" />
+						<h:outputText value="#{cartItem.product.price}" >
+						<f:convertNumber type="currency" currencySymbol="€" />
+						</h:outputText>
 					</p:column>
 					<p:column headerText="Image">
 						<img src="#{cartItem.product.imageFile}" />
@@ -31,7 +33,9 @@
 						<h:inputText value="#{cartItem.amount}" style="padding-left: 10px" />
 					</p:column>
 					<p:column headerText="Item Total">
-						<h:outputText value="#{cartItem.totalPrice}" />
+						<h:outputText value="#{cartItem.totalPrice}" >
+						<f:convertNumber type="currency" currencySymbol="€" />
+						</h:outputText>
 					</p:column>
 				</p:dataTable>
 			</h:form>
@@ -42,7 +46,7 @@
 			<p:commandButton value="Update" icon="ui-icon-arrowrefresh-1-e"
 				update=":form" action="#{cartView.update}" />
 			<p:commandButton value="Checkout" icon="ui-icon-home"
-				 update=":customerLoginForm" action="cartView.goOrder"
+				 update=":customerLoginForm" action="#{cartView.goOrder}" style="float: right;"
 				oncomplete="if (#{!cartView.loggedIn}) {PF('customerLoginDialog').show()}"	/>
 		</p:layoutUnit>
 		

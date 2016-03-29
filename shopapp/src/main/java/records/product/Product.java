@@ -1,9 +1,16 @@
 package records.product;
 
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
 
 @Entity
 public class Product {
@@ -14,6 +21,7 @@ public class Product {
 	private double price;
 	private String imageFile;
 	
+
 	@Id
 	@GeneratedValue
 	private int id;
@@ -49,6 +57,7 @@ public class Product {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+
 	public String getImageFile() {
 		return imageFile;
 	}
@@ -58,7 +67,8 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [name=" + name + ", description=" + description + ", qty=" + qty + ", price=" + price
-				+ ", imageFile=" + imageFile + ", id=" + id + "]";
+				+ ", imageFile=" + imageFile 
+				+ ", id=" + id + "]";
 	}
 	
 	

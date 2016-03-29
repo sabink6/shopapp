@@ -12,8 +12,6 @@
 		<p:layoutUnit position="north" size="100" header="CarsDealz">
 			<h:form>
 				<p:button value="Admin" icon="ui-icon-locked" style="float: right" outcome="admin"/>
-				<p:commandButton value="Go to Cart" icon="ui-icon-check"
-					style="float: right;" action="#{cartView.goCart}" />
 			</h:form>
 		</p:layoutUnit>
 		<p:layoutUnit position="center">
@@ -48,7 +46,8 @@
 			</p:dataTable>
 		</p:layoutUnit>
 		<p:layoutUnit position="south" size="100">
-
+			<p:commandButton value="Go to Cart" icon="ui-icon-check"
+					style="float: right;" action="#{cartView.goCart}" />
 		</p:layoutUnit>
 	</p:layout>
 

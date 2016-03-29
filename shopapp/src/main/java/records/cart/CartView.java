@@ -56,6 +56,37 @@ public class CartView {
 	private Customer customer;
 
 	private int orderId;
+	private String email;
+	private String password;
+	private boolean loggedIn;
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setThecart(List<CartItem> thecart) {
+		this.thecart = thecart;
+	}
+
+	public boolean isLoggedIn() {
+		return loggedIn;
+	}
+
+	public void setLoggedIn(boolean loggedIn) {
+		this.loggedIn = loggedIn;
+	}
 
 	public int getOrderId() {
 		return orderId;
@@ -107,8 +138,8 @@ public class CartView {
 	}
 
 	public List<CartItem> getThecart() {
-		//theCart = store.findAll();
-		System.out.println(TAG + " getThecart");
+		//not in the db thecart = store.findAll();
+		System.out.println(TAG + " in getThecart");
 		return thecart;
 	}
 
@@ -147,21 +178,16 @@ public class CartView {
 		this.customer = customer;
 	}
 
-	//create a new CartItem object and add it into an arrayList of CartItems
-	public String buy(Product p){
+	public void buy(Product p){
+		//create a new CartItem object and add it into an arrayList of CartItems
 		System.out.println(TAG + " selected product to buy: " + p.toString());
 		thecart.add(cartItem);
 		cartItem.setProduct(p);
 		cartItem.setAmount(1);
-		//System.out.println(TAG + " about to save cartItem: " + cartItem.toString());
-		//store.save(cartItem);
+		//do not save in db jet store.save(cartItem);
 		System.out.println(TAG + " saved cartItem to Thecart: " + cartItem.toString());
 		cartItem = new CartItem();
-
-		//System.out.println(TAG + " added to store");
-		return "";
 	}
-
 
 	//	public void remove(CartItem ci){
 	//		//removes CartItem from database
@@ -175,93 +201,66 @@ public class CartView {
 	public void update(){
 	}
 
-	private String email;
-
-	private String password;
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public void setThecart(List<CartItem> thecart) {
-		this.thecart = thecart;
-	}
-
-	private boolean loggedIn;
-
-
-	public boolean isLoggedIn() {
-		return loggedIn;
-	}
-
-	public void setLoggedIn(boolean loggedIn) {
-		this.loggedIn = loggedIn;
-	}
-
 	public String checkout() {
-			
-			System.out.println(TAG + " email: " + email);
-			System.out.println(TAG + " password: " + password);
-			RequestContext context = RequestContext.getCurrentInstance();
-			FacesMessage message = null;
-			
-			customer = customerService.loginCustomer(email, password);
-			
-			if(customer != null){
-				System.out.println(TAG + " Customer in the login " + customer.getEmail() + " " + customer.getPassword());
-				message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", email);
-				loggedIn = true;
-			}else{
-				message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
-				loggedIn = false;
-			}
-			
-			//message can't be null when message goes back
-			FacesContext.getCurrentInstance().addMessage(null, message);
-			context.addCallbackParam("loggedIn", loggedIn);
-			
-			if(loggedIn){
-				//create CustOrder
-				System.out.println(TAG + " The Cart: " + thecart.toString());
-				order = new CustOrder();
-				order.setItems(thecart);
-				order.setCustomer(customer);
-				orderService.save(order);
-	
-				List<CustOrder> orders = new ArrayList<CustOrder>();
-				orders.add(order);
-				customer.setCustOrders(orders);
-				//creates an entry in customer_custorder table otherwise empty set
-				customerService.save(customer);
-				System.out.println(TAG + " Customer saved: " + customer);
-				orderId = order.getId();
-				System.out.println(TAG + " OrderId to be sent: " + orderId);
-				return "./order.xhtml?faces-redirect=true&orderId=" + orderId +"\"";
-			}
-			return null;
-			
-	
+		System.out.println(TAG + " in checkout: " + orderId);
+		System.out.println(TAG + " email: " + email);
+		System.out.println(TAG + " password: " + password);
+		RequestContext context = RequestContext.getCurrentInstance();
+		FacesMessage message = null;
+
+		customer = customerService.loginCustomer(email, password);
+
+		if(customer != null){
+			System.out.println(TAG + " Customer in the checkout " + customer.getEmail() + " " + customer.getPassword());
+			message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", email);
+			loggedIn = true;
+		}else{
+			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+			loggedIn = false;
 		}
-	
-	//this doesn't work 
+
+		//message can't be null when message goes back
+		FacesContext.getCurrentInstance().addMessage(null, message);
+		context.addCallbackParam("loggedIn", loggedIn);
+
+		if(loggedIn){
+			//create CustOrder and add it to db
+			System.out.println(TAG + " The Cart: " + thecart.toString());
+			order = new CustOrder();
+			order.setItems(thecart);
+			order.setCustomer(customer);
+			orderService.save(order);
+
+			List<CustOrder> orders = new ArrayList<CustOrder>();
+			orders.add(order);
+			customer.setCustOrders(orders);
+
+			//creates an entry in customer_custorder table otherwise empty set
+			customerService.save(customer);
+
+			System.out.println(TAG + " Customer saved: " + customer);
+			orderId = order.getId();
+			System.out.println(TAG + " OrderId to be sent: " + orderId);
+			return "./order.xhtml?faces-redirect=true&orderId=" + orderId +"\"";
+		}
+		return null;
+
+	}
+
 	public String goOrder(){
-		return "./order.xhtml";
+		System.out.println(TAG + " in goOrder: " + orderId);
+		if(loggedIn){
+			//view updated
+			System.out.println(TAG + " The Cart: " + thecart.toString());
+			//update db
+			store.saveAll(thecart);
+			return "./order.xhtml?faces-redirect=true&orderId=" + orderId +"\"";
+		}
+		return null;
 	}
 
 	public String goCart(){
-		return "./cart.xhtml";
+		return "./cart.xhtml?faces-redirect=true";
 	}
 
 	public String goAdmin(){

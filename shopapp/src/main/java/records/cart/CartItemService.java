@@ -23,5 +23,9 @@ public class CartItemService {
 		cartItemRepository.delete(cust);
 	}
 	
+	public void saveAll(List<CartItem> custList) {
+		cartItemRepository.save(custList);
+	}
+	
 	
 }
