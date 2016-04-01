@@ -2,31 +2,15 @@ package records.cart;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.persistence.criteria.Order;
-
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.primefaces.context.RequestContext;
-import org.primefaces.util.Constants;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.ContextLoader;
-
-import javafx.event.ActionEvent;
 import records.customer.Customer;
 import records.customer.CustomerService;
 import records.order.CustOrder;
@@ -54,11 +38,22 @@ public class CartView {
 	private List<Product> products;
 	private CustOrder order;
 	private Customer customer;
+	
+	private Product product;
+	
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
 
 	private int orderId;
 	private String email;
 	private String password;
 	private boolean loggedIn;
+	private boolean inStock;
 
 	public String getEmail() {
 		return email;
@@ -77,7 +72,14 @@ public class CartView {
 	}
 
 	public void setThecart(List<CartItem> thecart) {
+		System.out.println(TAG + " in setThecart " + thecart);
 		this.thecart = thecart;
+	}
+	
+	public List<CartItem> getThecart() {
+		//not in the db thecart = store.findAll();
+		System.out.println(TAG + " in getThecart " + thecart);
+		return thecart;
 	}
 
 	public boolean isLoggedIn() {
@@ -86,6 +88,14 @@ public class CartView {
 
 	public void setLoggedIn(boolean loggedIn) {
 		this.loggedIn = loggedIn;
+	}
+
+	public boolean isInStock() {
+		return inStock;
+	}
+
+	public void setInStock(boolean inStock) {
+		this.inStock = inStock;
 	}
 
 	public int getOrderId() {
@@ -137,16 +147,6 @@ public class CartView {
 		this.customerService = customerService;
 	}
 
-	public List<CartItem> getThecart() {
-		//not in the db thecart = store.findAll();
-		System.out.println(TAG + " in getThecart");
-		return thecart;
-	}
-
-	public void setTheCart(List<CartItem> theCart) {
-		this.thecart = theCart;
-	}
-
 	public CartItem getCartItem() {
 		return cartItem;
 	}
@@ -189,72 +189,91 @@ public class CartView {
 		cartItem = new CartItem();
 	}
 
-	//	public void remove(CartItem ci){
-	//		//removes CartItem from database
-	//		System.out.println(TAG + " about to remove from store" + ci.toString());
-	//		store.remove(ci);
-	//		//on the view update=":cartTable, :messages"
-	//		thecart = store.findAll();
-	//		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "CartItem removed!", null));
-	//	}
+	public void remove(CartItem ci){
+		System.out.println(TAG + " cartitem to be removed: " + ci.toString());
+		System.out.println(TAG + " thecart before removal: " + thecart.toString());
+		thecart.remove(ci);
+		System.out.println(TAG + " thecart after removal: " + thecart.toString());
+	}
 
 	public void update(){
+		for(CartItem c :getThecart()){
+			int productQty = c.getProduct().getQty();
+			int cartItemQty = c.getAmount();
+			System.out.println(TAG + " product amount: " + productQty);
+			System.out.println(TAG + " cartitem amount: " + cartItemQty);
+			inStock = productQty>cartItemQty;
+			if(!inStock){
+				System.out.println(TAG + " ALERT: CAN'T CREATE CUSTOMER ORDER");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Not enough in stock", null));
+			}
+		}
+
 	}
 
 	public String checkout() {
-		System.out.println(TAG + " in checkout: " + orderId);
-		System.out.println(TAG + " email: " + email);
-		System.out.println(TAG + " password: " + password);
-		RequestContext context = RequestContext.getCurrentInstance();
-		FacesMessage message = null;
-
-		customer = customerService.loginCustomer(email, password);
-
-		if(customer != null){
-			System.out.println(TAG + " Customer in the checkout " + customer.getEmail() + " " + customer.getPassword());
-			message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", email);
-			loggedIn = true;
+		if(!inStock){
+			System.out.println(TAG + " ALERT: CAN'T CREATE CUSTOMER ORDER");
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Not enough itms in stock", null));
 		}else{
-			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
-			loggedIn = false;
-		}
+			System.out.println(TAG + " in checkout: " + orderId);
+			System.out.println(TAG + " email: " + email);
+			System.out.println(TAG + " password: " + password);
+			RequestContext context = RequestContext.getCurrentInstance();
+			FacesMessage message = null;
 
-		//message can't be null when message goes back
-		FacesContext.getCurrentInstance().addMessage(null, message);
-		context.addCallbackParam("loggedIn", loggedIn);
+			customer = customerService.loginCustomer(email, password);
 
-		if(loggedIn){
-			//create CustOrder and add it to db
-			System.out.println(TAG + " The Cart: " + thecart.toString());
-			order = new CustOrder();
-			order.setItems(thecart);
-			order.setCustomer(customer);
-			orderService.save(order);
+			if(customer != null){
+				System.out.println(TAG + " Customer in the checkout " + customer.getEmail() + " " + customer.getPassword());
+				message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", email);
+				loggedIn = true;
+			}else{
+				message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");
+				loggedIn = false;
+			}
 
-			List<CustOrder> orders = new ArrayList<CustOrder>();
-			orders.add(order);
-			customer.setCustOrders(orders);
+			//message can't be null when message goes back
+			FacesContext.getCurrentInstance().addMessage(null, message);
+			context.addCallbackParam("loggedIn", loggedIn);
 
-			//creates an entry in customer_custorder table otherwise empty set
-			customerService.save(customer);
+			if(loggedIn){
+				//create CustOrder and add it to database
+				System.out.println(TAG + " The Cart: " + thecart.toString());
+				order = new CustOrder();
+				order.setItems(thecart);
+				order.setCustomer(customer);
+				orderService.save(order);
 
-			System.out.println(TAG + " Customer saved: " + customer);
-			orderId = order.getId();
-			System.out.println(TAG + " OrderId to be sent: " + orderId);
-			return "./order.xhtml?faces-redirect=true&orderId=" + orderId +"\"";
+				List<CustOrder> orders = new ArrayList<CustOrder>();
+				orders.add(order);
+				customer.setCustOrders(orders);
+
+				//creates an entry in customer_custorder table otherwise empty set
+				customerService.save(customer);
+
+				System.out.println(TAG + " Customer saved: " + customer);
+				orderId = order.getId();
+				System.out.println(TAG + " OrderId to be sent: " + orderId);
+				return "./order.xhtml?faces-redirect=true&orderId=" + orderId +"\"";
+			}
 		}
 		return null;
-
 	}
 
 	public String goOrder(){
 		System.out.println(TAG + " in goOrder: " + orderId);
-		if(loggedIn){
-			//view updated
-			System.out.println(TAG + " The Cart: " + thecart.toString());
-			//update db
-			store.saveAll(thecart);
-			return "./order.xhtml?faces-redirect=true&orderId=" + orderId +"\"";
+		if(!inStock){
+			System.out.println(TAG + " ALERT: CAN'T CREATE CUSTOMER ORDER");
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Not enough itms in stock", null));
+		}else{
+			if(loggedIn){
+				//view updated
+				System.out.println(TAG + " The Cart: " + thecart.toString());
+				//update database
+				store.saveAll(thecart);
+				return "./order.xhtml?faces-redirect=true&orderId=" + orderId +"\"";
+			}
 		}
 		return null;
 	}

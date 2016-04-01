@@ -10,6 +10,8 @@ import records.product.Product;
 @Entity
 public class CartItem{
 	
+	static final String TAG = CartItem.class.getSimpleName().toUpperCase();
+	
 	private int amount;
 	private double totalPrice;
 	@OneToOne
@@ -33,7 +35,7 @@ public class CartItem{
 	}
 
 	public void setAmount(int amount) {
-		System.out.println("set amount " + amount);
+		System.out.println(TAG + " set cartItem amount " + amount);
 		this.amount = amount;
 	}
 
@@ -50,7 +52,7 @@ public class CartItem{
 	}
 
 	public void setTotalPrice(double totalPrice) {
-		System.out.println("set totalPrice " + totalPrice);
+		System.out.println(TAG + " set cartItem totalPrice " + totalPrice);
 		this.totalPrice = totalPrice;
 	}
 	

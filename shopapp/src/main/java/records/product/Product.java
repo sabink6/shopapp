@@ -1,16 +1,8 @@
 package records.product;
 
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
 
 @Entity
 public class Product {
@@ -44,6 +36,7 @@ public class Product {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
 	public int getQty() {
 		return qty;
 	}

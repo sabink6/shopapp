@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import records.customer.Customer;
+
 @Service
 public class ProductService {
 	
@@ -21,5 +23,9 @@ public class ProductService {
 
 	public void remove(Product p) {
 		productRepository.delete(p);
+	}
+	
+	public Product findProductById(int id) {
+		return productRepository.findOne(id);
 	}
 }

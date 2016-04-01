@@ -8,11 +8,13 @@
 
 <h:body>
 	<p:layout fullPage="true">
+	
 		<p:layoutUnit position="north" size="100" header="CarsDealz">
 		</p:layoutUnit>
 		<p:layoutUnit position="center">
-
 			<h:form id="form">
+			<p:messages autoUpdate="true"/>
+				<!-- <p:growl id="messages" />  -->
 				<p:dataTable var="cartItem" value="#{cartView.thecart}"
 					id="cartTable">
 					<p:column headerText="Name">
@@ -22,46 +24,60 @@
 						<h:outputText value="#{cartItem.product.description}" />
 					</p:column>
 					<p:column headerText="Price">
-						<h:outputText value="#{cartItem.product.price}" >
-						<f:convertNumber type="currency" currencySymbol="€" />
+						<h:outputText value="#{cartItem.product.price}">
+							<f:convertNumber type="currency" currencySymbol="€" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Image">
 						<img src="#{cartItem.product.imageFile}" />
 					</p:column>
 					<p:column headerText="Quantity">
-						<h:inputText value="#{cartItem.amount}" style="padding-left: 10px" />
+						<h:outputLabel for="amount" value="In stock: #{cartItem.product.qty}" />
+						<h:inputText id="amount" value="#{cartItem.amount}" style="padding-left: 10px"/>
 					</p:column>
 					<p:column headerText="Item Total">
-						<h:outputText value="#{cartItem.totalPrice}" >
-						<f:convertNumber type="currency" currencySymbol="€" />
+						<h:outputText value="#{cartItem.totalPrice}">
+							<f:convertNumber type="currency" currencySymbol="€" />
 						</h:outputText>
+					</p:column>
+					<p:column headerText="Operations">
+						<p:commandButton value="remove"
+							action="#{cartView.remove(cartItem)}" icon="ui-icon-trash"
+							update="@form">
+							<p:confirm header="Confirmation" message="Are you sure?"
+								icon="ui-icon-alert" />
+						</p:commandButton>
 					</p:column>
 				</p:dataTable>
 			</h:form>
+		</p:layoutUnit>
 
-		</p:layoutUnit>
-		
 		<p:layoutUnit position="south" size="100">
-			<p:commandButton value="Update" icon="ui-icon-arrowrefresh-1-e"
-				update=":form" action="#{cartView.update}" />
+			<p:commandButton value="Update" action="#{cartView.update}"
+				icon="ui-icon-arrowrefresh-1-e" update=":form" >
+			</p:commandButton>
 			<p:commandButton value="Checkout" icon="ui-icon-home"
-				 update=":customerLoginForm" action="#{cartView.goOrder}" style="float: right;"
-				oncomplete="if (#{!cartView.loggedIn}) {PF('customerLoginDialog').show()}"	/>
+				update=":customerLoginForm" action="#{cartView.goOrder}"
+				style="float: right;"
+				oncomplete="if (#{!cartView.loggedIn}) {PF('customerLoginDialog').show()}" />
 		</p:layoutUnit>
-		
+
 	</p:layout>
 
-	<p:dialog widgetVar="customerLoginDialog" closeOnEscape="true" modal="true" header="Customer Login">
+	<p:dialog widgetVar="customerLoginDialog" closeOnEscape="true"
+		modal="true" header="Customer Login">
 		<h:form id="customerLoginForm">
 			<p:growl id="messages" sticky="true" showDetail="true" life="3000" />
 			<p:panelGrid columns="2" cellpadding="5">
 				<h:outputLabel for="email" value="Email:" />
-				<p:inputText id="email" value="#{cartView.email}" required="true" label="email" />
+				<p:inputText id="email" value="#{cartView.email}" required="true"
+					label="email" />
 				<h:outputLabel for="password" value="Password:" />
-				<p:password id="password" value="#{cartView.password}" required="true" label="password" />
+				<p:password id="password" value="#{cartView.password}"
+					required="true" label="password" />
 			</p:panelGrid>
-			<p:commandButton value="Login" update="messages" action="#{cartView.checkout}"
+			<p:commandButton value="Login" update="messages"
+				action="#{cartView.checkout}"
 				oncomplete="handleDialogSubmit(args, 'customerLoginDialog')" />
 		</h:form>
 	</p:dialog>
@@ -77,6 +93,15 @@
 			}
 		}
 	</script>
+
+	<h:form>
+		<p:confirmDialog global="true" closeOnEscape="true">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+	</h:form>
 
 </h:body>
 </html>
